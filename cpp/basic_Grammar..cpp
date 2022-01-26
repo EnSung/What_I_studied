@@ -1,4 +1,3 @@
-
 #include <iostream> //전처리 지시자
 #include <climits>
 #include <cstring>
@@ -180,7 +179,27 @@ int main() {
 
 
 
-	//열거체
+	//열거체(enum)
+	//기호 상수를 만드는 것에 대한 또 다른 방법.
+
+	enum spectrum{red = 0, orange = 2, yellow, green, blue, violet, indigo, ultraviolet};
+	// 열거자들의 값을 지정해 줄 수 있음 ( 꼭 정수로 해아함 )
+	// 또한 값이 지정되지않은 열거자들을 이전 열거자 + 1 의 값을 가지게 됨
+	/*
+		사용법
+		1. spectrum을 새로운 데이터형 이름으로 만든다.
+		2. red, orange, yellow 등등.. 을 0~ 7까지 정수 값을 각각 나타내는 기호 상수로 만듦.
+	*/
+
+
+	spectrum color1 = orange;
+	cout << a << endl; // 1이 출력됨
+	//spectrum color1 = orange + yellow; 열거자 끼리 연산은 X 
+
+	int b = blue;
+	b = blue + 3; // blue는 열거체 안에서 4, 7이라는 값이 대입됨 
+
+	 
 #pragma endregion
 
 	return 0;
