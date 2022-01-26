@@ -537,7 +537,7 @@ int main() {
 	
 #pragma endregion
 
-	return 1000000;
+	return 0;
 }	
 
 #pragma region 함수
