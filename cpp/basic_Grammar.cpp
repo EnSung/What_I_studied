@@ -2,8 +2,12 @@
 #include <climits>
 #include <cstring>
 
+#define _CRT_SECURE_NO_WARNINGS
 using namespace std; 
 
+
+int sumArray(int*, int);
+int sumArray2(int*, int*);
 int main() {
 
 #pragma region 기본적인 자료형과 형변환
@@ -180,7 +184,7 @@ int main() {
 		//열거체(enum)
 		//기호 상수를 만드는 것에 대한 또 다른 방법.
 
-		enum spectrum { red = 0, orange = 2, yellow, green, blue, violet, indigo, ultraviolet };
+		enum spectrum { red = 0, orange = 4, yellow, green, blue, violet, indigo, ultraviolet };
 		// 열거자들의 값을 지정해 줄 수 있음 ( 꼭 정수로 해아함 )
 		// 또한 값이 지정되지않은 열거자들을 이전 열거자 + 1 의 값을 가지게 됨
 		/*
@@ -243,8 +247,168 @@ int main() {
 		cout << "이제 a의 값은 " << a << endl;
 
 		// 이름이 없는 메모리, 즉 아직 결정되지 않은 메모리를 대입할 수 있다. 그것이 포인터의 핵심.
+
+
+		//new 연산자
+		/*
+		어떤 데이터 형을 원하는지 new 연산자에게 알려주면,
+		new 연ㅅ간자는 그에 맞는 크기의 메모리 블록을 찾아내고 그 블록의 주소를 리턴한다.
+		*/
+
+		int* pointer = new int; // new 연산자 사용
+
+// 그럼 이것과 다른 점이 무엇일ㅇ까?
+int aa;
+int* bb = &aa;
+
+// new 연산자를 사용한 경우 생성된 것은 pointer로 밖에 접근할 수 없다.
+// 하지만 위와같은 방법은 aa라는 변수 명으로도 접근이 가능함.
+
+
+
+// delete 연산자
+
+/*
+사용한 메모리를 다시 메모리 폴로 환수
+환수된 메모리는 프로그램의 다른 부분에서 다시 사용
+*/
+
+/*
+1. new로 대입하지 않는 메모리는 delete로 해제할수 없다.
+2. 같은 메모리 블록을 연달아 두 번 delete 로 해제할 수 없다.
+3. new[]로 메모리를 대입할 경우 delete[]로 해제한다.(배열)
+=> 대괄호를 사용하지 않았다면 delete도 대괄호를 사용하지 않아야 한다.
+*/
+
+int* ps = new int; // 메모리 사용
+delete ps; // 메모리 다시 반환
+//반환하지 않으면 대입은 됐지만 나중에 사용하지않아 메모리 누수가 되고 계속 메모리 누수가 되게되면 프로그램은 먹통된다.
+
+// ex
+
+double* p3 = new double[3];
+p3[0] = 0.2;
+p3[1] = 0.5;
+p3[2] = 0.8;
+
+cout << "p3[1] is " << p3[1] << endl;
+
+p3 = p3 + 1;  // 포인터를 증가시킨다.
+
+cout << "Noew p3[0] is " << p3[0] << " and ";
+cout << "p3[1] is " << p3[1] << endl;
+
+p3 = p3 - 1; // 다시 시작 위치를 지시한다.
+delete[] p3; // 배열 메모리 해제
+
+
+
+char animal[20];
+char* p2;
+
+cout << "\n\n\n";
+cout << "동물 이름을 입력하십시오\n";
+cin >> animal;
+
+p2 = new char[strlen(animal) + 1]; // 실행중 배열의 크기를 정하는 것
+strcpy(p2, animal);
+
+cout << "입력하신 동물 이름을 복사하였습니다" << endl;
+cout << "입력하신 동물 이름은 " << animal << "이고, 그 주소는 " << (int*)animal << "입니다." << endl;
+cout << "복사된 동물 이름은 " << p2 << "이고, 그 주소는 " << (int*)p2 << "입니다." << endl;
+
+
+// 동적 구조체 생성
+
+// 동적으로 생성된 구조체는 참졸르하기위해 . 이아닌 -> 를 쓴다.
+// 이것이 싫다면 (*구조체변수이름). 으로 참조 가능
+struct MyStruc {
+	char name[20];
+	int age;
+};
+
+MyStruc* temp = new MyStruc; // 동적 구조체 생성
+
+cout << "\n\n\n";
+
+cout << "당신의 이름을 입력하십시오";
+cin >> temp->name;
+
+cout << "당신의 나이를 입력하십시오";
+cin >> temp->age;
+
+cout << "안녕하세요! " << temp->name << "씨!" << endl;
+cout << "당신은 " << temp->age << "살 이군요!" << endl;
+		}
+#pragma endregion
+
+#pragma region 반복문, 조건문
+
+		// 반복문과 조건문은 C의 문법과 똑같다.
+#pragma endregion
+
+#pragma region 함수
+
+		// 함수의 형태 
+		// C문법과 동일
+
+		// 함수와 배열
+
+		// 배열이름을 배열의 첫번째 인덱스 주소로 인식
+		// 즉arr == &arr[0]
+
+		// 따라서 배열을 포인터 매개변수로 받을 수 있다.
+
+	{
+	//ex
+
+		int tempArray[20] = {
+			1,2,3,4,5,6,7,8,9,10,23,4,5,33,5,3,5,3
+		};
+
+		cout << sizeof tempArray << endl; // 80 출력 => 배열의 전체 크기
+
+
+
+		cout << sumArray(tempArray, 20) << endl;
+
+		int tempArray2[20] = {
+			1,2,3,4,5,6,7,8,9,10,23,4,5,33,5,3,5,3
+		};
+
+		cout << "함수의 열 번째 인덱스까지의 합은 " << sumArray2(tempArray2, tempArray2 + 10) << "입니다.\n";
 	}
+		
 #pragma endregion
 
 	return 0;
 }	
+
+
+
+int sumArray(int* arrays, int arraySize) {
+
+	cout << sizeof arrays << endl; // 8 출력 => 배열의 주솟값 크기
+
+	int total = 0;
+
+	for (int i = 0; i < arraySize; i++)
+	{
+		total += arrays[i];
+	}
+
+	return total;
+}
+
+int sumArray2(int* beginIndex, int* endIndex) {
+
+
+	int total = 0;
+	
+	for (int* i = beginIndex; i != endIndex; i++)
+	{
+		total += *i;
+	}
+
+	return total;
+}
