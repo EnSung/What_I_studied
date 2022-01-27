@@ -1,6 +1,9 @@
 #include <iostream> //전처리 지시자
 #include <climits>
 #include <cstring>
+#include <string>
+
+
 
 #define _CRT_SECURE_NO_WARNINGS
 using namespace std; 
@@ -30,6 +33,8 @@ void swapC(int, int);
 //class 혹은 typeName(int, float ....)
 template <class Any> // 템플릿
 Any sum_Two_Num(Any,Any);
+
+
 
 int main() {
 
@@ -512,7 +517,6 @@ int main() {
 	*/
 #pragma endregion
 
-
 #pragma region 함수 템플릿
 
 	{
@@ -530,12 +534,52 @@ int main() {
 		cout << sum_Two_Num(a, b) << endl; // Any는 int와 매칭
 		cout << sum_Two_Num(c, d) << endl; // Any는 float와 매칭
 		// cout << sum(a, d) << endl; <- 오류
-		// Why? a가 int형이라 Any라는 템플릿은 int랑 매칭된다. 
+		// Why? a가 int형이라 Any라는 템플릿은 int랑 매칭된다. 따라서 float형인 d가 들어올 수 없다. 
 	}
 
 
 	
 #pragma endregion
+
+
+#pragma region 분할 컴파일
+	{
+		// 코드는 3개로 나눌 수 있다.
+		// 헤더
+		// 1. 함수원형
+		// 2. #define이나 const를 사용하는 기호 상수
+		// 3. 구조체 선언
+		// 4. 클래스 선언
+		// 5. 템플릿 선언
+		// 6. 인라인함수 
+		// 등등
+		// 
+		// 메인
+		// 함수 구현부
+
+		// 헤더 부분은 따로 잘라내 헤더 파일에 넣을 수 있다
+		// 이 후 include를 이용해 헤더파일을 불러온다.
+
+		// 함수 구현부 또한 다른 cpp 파일을 만들어놓아도 코드는 정상작동한다.
+
+		// 이것의 장점?
+		// 코드를 획기적으로 재사용 할 수 있다.
+		// 
+		// 주의점 : 헤더 파일을 여러 파일에 포함시킬 때에 반드시 단 한번만 포함해야한다.
+		// =>헤더파일 B에서 A를 include했는데 메인소스파일에서 A,B를 모두 include하지마라.
+
+		//이를막기위한 방법으론 헤더파일에 #ifndef를 쓰는방법이있다.
+		//#ifndef name (if not define)
+		// #define name
+		// 
+		//#endif
+		// 의 사이구문은 컴파일 시 한 번더 발견된다면 컴파일러가 이를 무시한다.
+	} 
+	
+
+#pragma endregion
+
+
 
 	return 0;
 }	
