@@ -108,7 +108,7 @@ public:
 	void addMins(int);
 	//Time sum(Time&);
 	Time operator+(Time&); // sum함수 이름을 operator+
-	void show();
+	virtual void show();
 	Time();
 	Time(int,int);
 	~Time();
@@ -116,9 +116,11 @@ public:
 	friend Time operator*(int, Time&); // 이 원형은 두가지 함축적인 의미를 가지고있다.
 	// operator*는 클래스 안에 선언되었지만 멤버함수가 아니다. 그러므로 우리가 평소에 호출하기위해 썼던 "." 이나 "->"를 통해 호출할 수 없다.
 	// 멤버함수는 아니지만 멤버함수와 동등한 접근 권한이 있다.
-	//
+	
+	friend std::ostream& operator<<(std::ostream&, Time&);
 
-private:
+	int getHour() { return hours; }
+	int getMins() { return mins; }
 
 };
 
@@ -144,7 +146,18 @@ void Time::addMins(int m) {
 	hours += mins / 60;
 	mins %= 60;
 }
-	
+
+/*
+Time Time::sum(Time& t) {
+	Time sum;
+	sum.mins = mins + t.mins;
+	sum.hours = hours + t.hours;
+	sum.hours += sum.mins / 60;
+	sum.mins %= 60;
+	return sum;
+}
+*/
+
 Time Time::operator+(Time& t) {
 	Time sum;
 	sum.mins = mins + t.mins;
@@ -175,8 +188,45 @@ Time Time::operator*(int n) {
 	return result;
 }
 
+std::ostream& operator<<(std::ostream& os, Time& t) {
+	os << t.hours << "시간" << t.mins << "분";
+	return os;
+ }
+
+
 #pragma endregion
 
+class NewTime : public Time {
+private:
+	int day;
+public:
+	NewTime();
+	NewTime(int, int, int);
+	//void print();
+	void show();
+};
+
+
+NewTime::NewTime() : Time()/*C#의 base, Java의 super*/ {
+	day = 0;
+
+}
+
+NewTime::NewTime(int h, int m, int d) : Time(h,m) {
+	day = d;
+}
+
+//void NewTime::print() {
+//	cout << "일 : " << day << endl;
+//	show();
+//}
+
+void NewTime::show() {
+	cout << "일 : " << day << endl;
+	cout << "시간 : " << getHour() << endl;
+	cout << "분 : " << getMins() << endl;
+	
+}
 #pragma endregion
 
 
@@ -285,7 +335,6 @@ Stock s1("A", 10, 1000);
 	cout << endl;
 	day2.show();
 	cout << endl;
-
 	Time total;
 	//total = day1.sum(day2); 
 	total = day1.operator+(day2); // 사용법1
@@ -296,7 +345,7 @@ Stock s1("A", 10, 1000);
 
 #pragma endregion
 
-#pragma region 프랜드
+#pragma region 프렌드
 	
 	//friend : public 이외에도 private로 접근 할 수 있는 통로.
 	// 어떤 클래스의 이항 연산자를 오버로딩하면 friend를 쓸 필요가 생김.
@@ -304,7 +353,7 @@ Stock s1("A", 10, 1000);
 	// ex
 	// Time 클래스의 operator*를 만드려고한다.
 	//
-
+	
 	Time a, b;
 	//a = b * 3; // 이것은 operator+처럼 Time과 Time이 연산하는 것이아닌 Time과 int의 연산 통해 Time클래스 값에 저장하는 방식
 	//a = b.operator*(3);  // 위의 것을 풀어쓰면 이러한 식이 된다. 매개변수로 Time클래스가아닌 int형 변수이기 때문에 
@@ -329,5 +378,80 @@ Stock s1("A", 10, 1000);
 
 
 #pragma endregion
+
+#pragma region << 연산자 오버로딩
+	{
+
+	// 연산자 오버로딩과 friend를 사용해 <<연산자르 ㄹ오버로딩해보기
+	Time t1(3, 45);
+	// 본래 Time을 보려면 
+	t1.show(); //를 써야하지만
+	
+	//cout << t1; // 이런식으로 쓸 수 있다면 코드가 더 직관적으로 들어올 것이다.
+
+	int a = 5, b = 8;
+
+	cout << a << b << endl; // 출력 값은 58
+	//이것은
+	(cout << a )<< b << endl; // cout 과 a 가 연산이 되고 그 결과 값이 다시 b와 연산되는 과정이라고 볼수 있다.
+ 	
+	cout << t1 << endl; // 이를 풀어보면
+	operator<<(cout,t1) << endl; // 이런식이 된다.
+
+	cout << "\n";
+	}
+
+#pragma endregion
+
+#pragma region 상속
+	{
+		/*
+		1. 기존의 클래스에 새로운 기능을 추가할 수 있다.
+		2. 클래스가 나타내고 있는 데이터에 다른 것을 더 추가할 수 있다.
+		3. 클래스 메서드가 동작하는 방식을 변경할 수 있다.
+		방법 : class Name : public ParentClassName
+
+		1. 파생 클래스형의 객체 안에는 기초 클래스형의 데이터 멤버들이 저장된다.
+		2. 파생 클래스형으ㅣ 객체는 기초 클래스형으 ㅣ메서드들을 사용할 수 있다.
+		3. 파생 클래스는 자기 자신으ㅣ생성자를 필요로한다.
+		4. 파생 클래스는 부가적인 데이터 멤버들과 멤버 함수들을 임의로 추가할 수 있다.
+		
+		파생클래스는 부모클래스의 private 멤버를 접근할 수 없다.
+		*/
+		{
+
+		NewTime temp1();
+		NewTime temp2(3,30,2);
+
+		}
+
+		//temp2.print();
+
+		// virtual 키워드 : 메서드가 재정의될 수 있도록 붙이는 키워드
+	
+		Time temp1(30, 2);
+		NewTime temp2(3, 30, 2);
+
+		temp1.show(); // 시 분 2개만 나옴
+		cout << endl;
+		temp2.show(); // 일 시 분 3개가 나옴
+
+		/*
+		1. 기초 클래스에서 가상메서드를 선언하면,
+		그 함수는 기초 클래스 및 파생되는 클래스에서 모두 가상이 된다.
+		2. 객체에 대한 참조를 사용하여, 객체를 지시하는 포인터를 사용하여
+		가상 메서드가 호출되면 참조나 포인터를 위해 정의된 메서드를  사용하지않고
+		객체형을 위해 정의된 메서드를 사용한다. > 동적 결합
+		3. 상속을 위해 기초 클래스로 사용할 클래스를 정의할 때,
+		파생 클래스에서 다시 정의해야 되는 클래스 메서드들은 가상 함수로 선언해야 한다.
+		*/
+	
+
+
+		// C++또한 업캐스팅을 할 수 있다.
+
+	}
+#pragma endregion
+
 
 }
